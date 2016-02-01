@@ -1,24 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="match_parent"
-    android:padding="@dimen/widget_margin">
-
-    <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <StackView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/stack_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal"
-        android:background="@drawable/wave_logo">
-
-        <ImageView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1" />
-
-        <TextView
-            android:id="@+id/forecast"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="3" />
-    </LinearLayout>
+        android:gravity="center"
+        android:loopViews="true" />
+    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:background="@drawable/wave_logo"
+        android:textColor="#ffffff"
+        android:textStyle="bold"
+        android:text="@string/empty_view_text"
+        android:textSize="20sp" />
 </FrameLayout>
