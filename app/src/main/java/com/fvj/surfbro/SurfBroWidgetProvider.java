@@ -36,7 +36,7 @@ public class SurfBroWidgetProvider extends AppWidgetProvider {
         AppWidgetManager mgr = AppWidgetManager.getInstance(context);
         if (intent.getAction().equals(TOAST_ACTION)) {
 
-            new WgParser().execute("http://www.windguru.cz/pt/index.php?sc=105160");
+            new WgParser(context).execute("http://www.windguru.cz/pt/index.php?sc=105160");
 
             int appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
                     AppWidgetManager.INVALID_APPWIDGET_ID);

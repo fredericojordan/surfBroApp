@@ -1,7 +1,9 @@
 package com.fvj.surfbro;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -30,6 +32,11 @@ import java.util.Iterator;
 
 public class WgParser extends AsyncTask<String, Void, String> {
     private static final String TAG = "WgParser";
+    private Context mContext;
+
+    public WgParser(Context context) {
+        mContext = context;
+    }
 
     protected String doInBackground(String... urls) {
         return getForecast(urls);
@@ -39,23 +46,37 @@ public class WgParser extends AsyncTask<String, Void, String> {
         String forecastData = requestForecastData(urls[0]);
         if (forecastData == null) return "";
         JSONObject forecast_json = parseJsonForecast(forecastData);
-        String wave_height_str = String.format("WAVE HEIGHT: %.1f", getWaveHeight(forecast_json).get(0));
+        String wave_height_str = String.format("WAVE HEIGHT: %.1fm", getWaveHeight(forecast_json).get(0));
         Log.d(TAG, wave_height_str);
         return wave_height_str;
     }
 
-    protected ArrayList<Double> getWaveHeight(JSONObject forecast) { return getArrayFromForecast(forecast, "HTSGW"); }
-    protected ArrayList<Double> getWaveDirection(JSONObject forecast) { return getArrayFromForecast(forecast, "DIRPW"); }
-    protected ArrayList<Double> getWindSpeed(JSONObject forecast) { return getArrayFromForecast(forecast, "WINDSPD"); }
-    protected ArrayList<Double> getWindDirection(JSONObject forecast) { return getArrayFromForecast(forecast, "WINDDIR"); }
-    protected ArrayList<Double> getTemperature(JSONObject forecast) { return getArrayFromForecast(forecast, "TMPE"); }
+    protected ArrayList<Double> getWaveHeight(JSONObject forecast) {
+        return getArrayFromForecast(forecast, "HTSGW");
+    }
+
+    protected ArrayList<Double> getWaveDirection(JSONObject forecast) {
+        return getArrayFromForecast(forecast, "DIRPW");
+    }
+
+    protected ArrayList<Double> getWindSpeed(JSONObject forecast) {
+        return getArrayFromForecast(forecast, "WINDSPD");
+    }
+
+    protected ArrayList<Double> getWindDirection(JSONObject forecast) {
+        return getArrayFromForecast(forecast, "WINDDIR");
+    }
+
+    protected ArrayList<Double> getTemperature(JSONObject forecast) {
+        return getArrayFromForecast(forecast, "TMPE");
+    }
 
     protected ArrayList<Double> getArrayFromForecast(JSONObject forecast, String key) {
         try {
             if (forecast.has(key)) {
-                Log.d(TAG, String.format("FORECAST HAS KEY {%s}", key));
+                Log.d(TAG, String.format("Forecast has key {%s}", key));
                 JSONArray json_array = forecast.getJSONArray(key);
-                Log.d(TAG, json_array.toString());
+                Log.d(TAG, String.format("%s: %s", key, json_array.toString()));
                 return parseArray(json_array);
             } else {
                 Log.w(TAG, String.format("FORECAST DOES NOT HAVE KEY {%s}", key));
@@ -132,6 +153,9 @@ public class WgParser extends AsyncTask<String, Void, String> {
     }
 
     protected void onPostExecute(String str) {
-
+        if (str != "")
+            Toast.makeText(mContext, str, Toast.LENGTH_LONG).show();
+        else
+            Toast.makeText(mContext, "No forecast", Toast.LENGTH_LONG).show();
     }
 }
