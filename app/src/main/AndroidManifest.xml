@@ -19,7 +19,7 @@
         </receiver>
 
         <service
-            android:name="SurfBroWidgetService"
+            android:name="SurfBroService"
             android:exported="false"
             android:permission="android.permission.BIND_REMOTEVIEWS" />
 
