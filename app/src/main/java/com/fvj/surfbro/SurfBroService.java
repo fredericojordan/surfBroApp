@@ -4,6 +4,12 @@ package com.fvj.surfbro;
  * Created by fvj on 01/02/2016.
  */
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +17,7 @@ import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
@@ -38,7 +45,10 @@ class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
         // for example downloading or creating content etc, should be deferred to onDataSetChanged()
         // or getViewAt(). Taking more than 20 seconds in this call will result in an ANR.
         for (int i = 0; i < mCount; i++) {
-            mWidgetItems.add(new WidgetItem(i + "!"));
+            if (i == 5) {
+                mWidgetItems.add(new WidgetItem(i + "!!"));
+            } else
+                mWidgetItems.add(new WidgetItem(i + "!"));
         }
 
         // We sleep for 3 seconds here to show how the empty view appears in the interim.

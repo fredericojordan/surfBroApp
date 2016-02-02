@@ -35,10 +35,21 @@ public class SurfBroWidgetProvider extends AppWidgetProvider {
     public void onReceive(Context context, Intent intent) {
         AppWidgetManager mgr = AppWidgetManager.getInstance(context);
         if (intent.getAction().equals(TOAST_ACTION)) {
+
+            new WgParser().execute("http://www.windguru.cz/pt/index.php?sc=105160");
+
             int appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
                     AppWidgetManager.INVALID_APPWIDGET_ID);
             int viewIndex = intent.getIntExtra(EXTRA_ITEM, 0);
-            Toast.makeText(context, "Touched view " + viewIndex, Toast.LENGTH_SHORT).show();
+
+            String toastText;
+            if ( viewIndex==5 ) {
+                toastText = "CINCOOOOO";
+            } else {
+                toastText = "Touched view " + viewIndex;
+            }
+
+            Toast.makeText(context, toastText, Toast.LENGTH_SHORT).show();
         }
         super.onReceive(context, intent);
     }
