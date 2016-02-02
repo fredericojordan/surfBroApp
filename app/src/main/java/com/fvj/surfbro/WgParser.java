@@ -44,9 +44,11 @@ public class WgParser extends AsyncTask<String, Void, String> {
 
     protected String getForecast(String... urls) {
         String forecastData = requestForecastData(urls[0]);
-        if (forecastData == null) return "";
+        if (forecastData == null) return "No forecast";
         JSONObject forecast_json = parseJsonForecast(forecastData);
-        String wave_height_str = String.format("WAVE HEIGHT: %.1fm", getWaveHeight(forecast_json).get(0));
+        String wave_height_str = String.format("WAVE HEIGHT: %.1fm\nWIND SPEED: %.1fkn",
+                getWaveHeight(forecast_json).get(0),
+                getWindSpeed(forecast_json).get(0));
         Log.d(TAG, wave_height_str);
         return wave_height_str;
     }
@@ -153,9 +155,6 @@ public class WgParser extends AsyncTask<String, Void, String> {
     }
 
     protected void onPostExecute(String str) {
-        if (str != "")
-            Toast.makeText(mContext, str, Toast.LENGTH_LONG).show();
-        else
-            Toast.makeText(mContext, "No forecast", Toast.LENGTH_LONG).show();
+        Toast.makeText(mContext, str, Toast.LENGTH_LONG).show();
     }
 }
