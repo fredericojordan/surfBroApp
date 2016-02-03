@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <StackView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/stack_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:loopViews="true" />
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+    <ImageView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/forecast_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:src="@drawable/wave_logo3" />
     <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/empty_view"
+        android:id="@+id/forecast_text"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:background="@drawable/wave_logo"
-        android:textColor="#ffffff"
+        android:textColor="@color/logo_background"
         android:textStyle="bold"
         android:text="@string/empty_view_text"
-        android:textSize="20sp" />
-</FrameLayout>
+        android:textSize="30sp" />
+</LinearLayout>

@@ -20,10 +20,5 @@
                 android:resource="@xml/surf_bro_widget_info" />
         </receiver>
 
-        <service
-            android:name="SurfBroService"
-            android:exported="false"
-            android:permission="android.permission.BIND_REMOTEVIEWS" />
-
     </application>
 </manifest>
