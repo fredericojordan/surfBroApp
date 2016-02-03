@@ -31,7 +31,11 @@ import java.util.Iterator;
  */
 
 public class WgParser extends AsyncTask<String, Void, String> {
+
     private static final String TAG = "WgParser";
+    private static final String NO_FORECAST = "No forecast!";
+    private static final int MAX_RETRIES = 3;
+
     private Context mContext;
     public AsyncResponse delegate = null;
 
@@ -44,16 +48,24 @@ public class WgParser extends AsyncTask<String, Void, String> {
     }
 
     protected String getForecast(String... urls) {
-        String forecastData = requestForecastData(urls[0]);
-        if (forecastData == null) return "No forecast";
+        String forecastData = null;
+        int reconnections = 0;
+
+        while ( forecastData == null ) {
+            forecastData = requestForecastData(urls[0]);
+            if ( ++reconnections > MAX_RETRIES ) {
+                return NO_FORECAST;
+            }
+        }
+
         JSONObject forecast_json = parseJsonForecast(forecastData);
-        String wave_height_str = String.format("Waves: %.1fm %s\nWind: %.1fkn %s",
+        String forecast_str = String.format("Waves: %.1fm %s\nWind: %.1fkn %s",
                 getWaveHeight(forecast_json).get(0),
                 parseDirection(getWaveDirection(forecast_json).get(0)),
                 getWindSpeed(forecast_json).get(0),
-                parseDirection(getWindDirection(forecast_json).get(0)) );
-        Log.d(TAG, wave_height_str);
-        return wave_height_str;
+                parseDirection(getWindDirection(forecast_json).get(0)));
+        Log.d(TAG, forecast_str);
+        return forecast_str;
     }
 
     protected ArrayList<Double> getWaveHeight(JSONObject forecast) { return getArrayFromForecast(forecast, "HTSGW"); }
@@ -145,7 +157,9 @@ public class WgParser extends AsyncTask<String, Void, String> {
 
     protected void onPostExecute(String str) {
         Toast.makeText(mContext, str, Toast.LENGTH_LONG).show();
-        delegate.processFinish(str);
+        if ( !str.equals(NO_FORECAST) ) {
+            delegate.processFinish(str);
+        }
     }
 
     protected String parseDirection(double dir) {
