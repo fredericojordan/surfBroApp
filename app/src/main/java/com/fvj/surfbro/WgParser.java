@@ -47,9 +47,11 @@ public class WgParser extends AsyncTask<String, Void, String> {
         String forecastData = requestForecastData(urls[0]);
         if (forecastData == null) return "No forecast";
         JSONObject forecast_json = parseJsonForecast(forecastData);
-        String wave_height_str = String.format("Waves: %.1fm\nWind: %.1fkn",
+        String wave_height_str = String.format("Waves: %.1fm %s\nWind: %.1fkn %s",
                 getWaveHeight(forecast_json).get(0),
-                getWindSpeed(forecast_json).get(0));
+                parseDirection(getWaveDirection(forecast_json).get(0)),
+                getWindSpeed(forecast_json).get(0),
+                parseDirection(getWindDirection(forecast_json).get(0)) );
         Log.d(TAG, wave_height_str);
         return wave_height_str;
     }
@@ -144,5 +146,25 @@ public class WgParser extends AsyncTask<String, Void, String> {
     protected void onPostExecute(String str) {
         Toast.makeText(mContext, str, Toast.LENGTH_LONG).show();
         delegate.processFinish(str);
+    }
+
+    protected String parseDirection(double dir) {
+        if (dir >= 337.5 || dir < 22.5)
+            return "N";
+        if (dir >= 22.5 && dir < 67.5)
+            return "NE";
+        if (dir >= 67.5 && dir < 112.5)
+            return "E";
+        if (dir >= 112.5 && dir < 157.5)
+            return "SE";
+        if (dir >= 157.5 && dir < 202.5)
+            return "S";
+        if (dir >= 202.5 && dir < 247.5)
+            return "SW";
+        if (dir >= 247.5 && dir < 292.5)
+            return "W";
+        if (dir >= 292.5 && dir < 337.5)
+            return "NW";
+        return "";
     }
 }
