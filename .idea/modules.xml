@@ -3,7 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/SurfBro.iml" filepath="$PROJECT_DIR$/SurfBro.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/surfbro/surfbro.iml" filepath="$PROJECT_DIR$/surfbro/surfbro.iml" />
     </modules>
   </component>
 </project>
