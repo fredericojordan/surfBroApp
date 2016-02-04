@@ -66,8 +66,8 @@ public class SurfBroWidgetProvider extends AppWidgetProvider implements AsyncRes
 
         RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.surf_bro_widget);
         remoteViews.setTextViewText(R.id.forecast_text, output);
-        remoteViews.setTextViewText(R.id.day_text, String.format("%d", timestamp.get(Calendar.DAY_OF_MONTH)));
-        remoteViews.setTextViewText(R.id.hour_text, String.format("%02d:%02d", timestamp.get(Calendar.HOUR_OF_DAY), timestamp.get(Calendar.MINUTE)));
+        remoteViews.setTextViewText(R.id.date_text, String.format("%02d/%02d", timestamp.get(Calendar.DAY_OF_MONTH), timestamp.get(Calendar.MONTH)+1));
+        remoteViews.setTextViewText(R.id.time_text, String.format("%02d:%02d", timestamp.get(Calendar.HOUR_OF_DAY), timestamp.get(Calendar.MINUTE)));
 
         AppWidgetManager.getInstance( context ).updateAppWidget(widget_id, remoteViews);
     }

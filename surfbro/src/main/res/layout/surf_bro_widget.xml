@@ -33,7 +33,7 @@
         android:orientation="vertical">
 
         <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/day_text"
+            android:id="@+id/date_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -42,7 +42,7 @@
             android:textSize="12sp" />
 
         <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/hour_text"
+            android:id="@+id/time_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
