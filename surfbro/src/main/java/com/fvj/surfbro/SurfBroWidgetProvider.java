@@ -3,70 +3,72 @@ package com.fvj.surfbro;
  * Created by fvj on 27/01/2016.
  */
 
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
+import java.util.Calendar;
+
 public class SurfBroWidgetProvider extends AppWidgetProvider implements AsyncResponse {
-    public static final String TOAST_ACTION = "com.fvj.surfbro.TOAST_ACTION";
-    public static final String EXTRA_ITEM = "com.fvj.surfbro.EXTRA_ITEM";
 
-    private Context mContext;
-    private AppWidgetManager mAppWidgetManager;
-    private int mAppWidgetId;
-
-    @Override
-    public void onDeleted(Context context, int[] appWidgetIds) {
-        super.onDeleted(context, appWidgetIds);
-    }
-
-    @Override
-    public void onDisabled(Context context) {
-        super.onDisabled(context);
-    }
-
-    @Override
-    public void onEnabled(Context context) {
-        super.onEnabled(context);
-    }
+    private static final String TAG = "WidgetProvider";
+    private static final String LOGO_CLICKED = "com.fvj.surfbro.LOGO_CLICKED";
 
     @Override
     public void onReceive(Context context, Intent intent) {
-//        AppWidgetManager mgr = AppWidgetManager.getInstance(context);
-
-        if (intent.getAction().equals(TOAST_ACTION)) {
-
-//            int appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
-//            int viewIndex = intent.getIntExtra(EXTRA_ITEM, 0);
-
-            Toast.makeText(context, "Intent!", Toast.LENGTH_SHORT).show();
+        if (intent.getAction().equals(LOGO_CLICKED)) {
+            callForRefresh(context);
         }
         super.onReceive(context, intent);
     }
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        this.mContext = context;
-        this.mAppWidgetManager = appWidgetManager;
-        this.mAppWidgetId = appWidgetIds[0];
+        super.onUpdate(context, appWidgetManager, appWidgetIds);
 
         // update each of the widgets with the remote adapter
         for (int i = 0; i < appWidgetIds.length; ++i) {
 
-            WgParser parser = new WgParser(context);
-            parser.delegate = this;
-            parser.execute("http://www.windguru.cz/pt/index.php?sc=105160");
+            callForRefresh(context);
+            setupClickIntent(context, appWidgetManager, appWidgetIds[i]);
 
         }
-        super.onUpdate(context, appWidgetManager, appWidgetIds);
     }
 
-    public void processFinish(String output) {
-        RemoteViews remoteViews = new RemoteViews(mContext.getPackageName(), R.layout.surf_bro_widget);
+    protected void callForRefresh(Context context) {
+        Toast.makeText(context, "Refreshing...", Toast.LENGTH_SHORT).show();
+        WgParser parser = new WgParser(context);
+        parser.delegate = this;
+        parser.execute("http://www.windguru.cz/pt/index.php?sc=105160");
+    }
+
+    protected void setupClickIntent(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
+        RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.surf_bro_widget);
+        remoteViews.setOnClickPendingIntent(R.id.logo_button, getPendingSelfIntent(context, LOGO_CLICKED));
+        appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
+    }
+
+    protected PendingIntent getPendingSelfIntent(Context context, String action) {
+        Intent intent = new Intent(context, getClass());
+        intent.setAction(action);
+        return PendingIntent.getBroadcast(context, 0, intent, 0);
+    }
+
+    public void processFinish(Context context, String output, Calendar timestamp) {
+
+        ComponentName name = new ComponentName(context, SurfBroWidgetProvider.class);
+        int widget_id = AppWidgetManager.getInstance(context).getAppWidgetIds(name)[0];
+
+        RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.surf_bro_widget);
         remoteViews.setTextViewText(R.id.forecast_text, output);
-        mAppWidgetManager.updateAppWidget(mAppWidgetId, remoteViews);
+        remoteViews.setTextViewText(R.id.day_text, String.format("%d", timestamp.get(Calendar.DAY_OF_MONTH)));
+        remoteViews.setTextViewText(R.id.hour_text, String.format("%02d:%02d", timestamp.get(Calendar.HOUR_OF_DAY), timestamp.get(Calendar.MINUTE)));
+
+        AppWidgetManager.getInstance( context ).updateAppWidget(widget_id, remoteViews);
     }
 }

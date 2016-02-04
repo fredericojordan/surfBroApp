@@ -3,19 +3,51 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal">
-    <ImageView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/forecast_image"
-        android:layout_width="wrap_content"
+
+    <ImageButton xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/logo_button"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:src="@drawable/wave_logo3" />
+        android:layout_weight="1"
+        android:background="@color/transparent"
+        android:src="@drawable/logo"
+        android:clickable="false" />
+
     <TextView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/forecast_text"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
+        android:layout_weight="3"
         android:gravity="center"
-        android:textColor="@color/logo_background"
-        android:textStyle="bold"
         android:text="@string/empty_view_text"
-        android:textSize="30sp" />
+        android:textColor="@color/logo_background"
+        android:textSize="25sp"
+        android:textStyle="bold" />
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_gravity="center"
+        android:orientation="vertical">
+
+        <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/day_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textColor="@color/logo_background"
+            android:textSize="12sp" />
+
+        <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/hour_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textColor="@color/logo_background"
+            android:textSize="12sp" />
+    </LinearLayout>
 </LinearLayout>
