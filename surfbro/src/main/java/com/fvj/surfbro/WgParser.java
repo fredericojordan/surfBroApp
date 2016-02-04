@@ -64,24 +64,30 @@ public class WgParser extends AsyncTask<String, Void, String> {
 
         timestamp = Calendar.getInstance();
 
-        String forecast_str = makeString(forecastData);
+        String forecast_str = makeForecastString(forecastData);
 
         Log.d(TAG, forecast_str);
         return forecast_str;
     }
 
-    protected String makeString(JSONObject forecastData) {
-        int forecast_index = 0;
-        return String.format("Waves: %.1fm %s\nWind: %.1fkn %s",
+    protected String makeForecastString(JSONObject forecastData) {
+        int forecast_index=0;
+
+        while ( getWaveHeight(forecastData).get(forecast_index) == 0.0 )
+            forecast_index++;
+
+        return String.format("Waves: %.1fm %s\nWind: %.0f(%.0f)kn %s",
                 getWaveHeight(forecastData).get(forecast_index),
                 parseDirection(getWaveDirection(forecastData).get(forecast_index)),
                 getWindSpeed(forecastData).get(forecast_index),
+                getWindGustSpeed(forecastData).get(forecast_index),
                 parseDirection(getWindDirection(forecastData).get(forecast_index)));
     }
 
     protected ArrayList<Double> getWaveHeight(JSONObject forecast) { return getArrayFromForecast(forecast, "HTSGW"); }
     protected ArrayList<Double> getWaveDirection(JSONObject forecast) { return getArrayFromForecast(forecast, "DIRPW"); }
     protected ArrayList<Double> getWindSpeed(JSONObject forecast) { return getArrayFromForecast(forecast, "WINDSPD"); }
+    protected ArrayList<Double> getWindGustSpeed(JSONObject forecast) { return getArrayFromForecast(forecast, "GUST"); }
     protected ArrayList<Double> getWindDirection(JSONObject forecast) { return getArrayFromForecast(forecast, "WINDDIR"); }
     protected ArrayList<Double> getTemperature(JSONObject forecast) { return getArrayFromForecast(forecast, "TMPE"); }
 
