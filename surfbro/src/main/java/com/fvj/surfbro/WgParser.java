@@ -31,25 +31,26 @@ import java.util.Iterator;
  * wind_direction = "WINDDIR"
  */
 
-public class WgParser extends AsyncTask<String, Void, String> {
+public class WgParser extends AsyncTask<String, Void, JSONObject> {
 
     private static final String TAG = "WgParser";
     private static final String NO_FORECAST = "No forecast!";
     private static final int MAX_RETRIES = 5;
 
-    private Context mContext;
     public AsyncResponse delegate = null;
-    protected Calendar timestamp;
+
+    private Context mContext;
+    private Calendar timestamp;
 
     public WgParser(Context context) {
         this.mContext = context;
     }
 
-    protected String doInBackground(String... urls) {
+    protected JSONObject doInBackground(String... urls) {
         return getForecast(urls);
     }
 
-    protected String getForecast(String... urls) {
+    protected JSONObject getForecast(String... urls) {
         JSONObject forecastData = null;
         int reconnections = 0;
 
@@ -58,23 +59,17 @@ public class WgParser extends AsyncTask<String, Void, String> {
             forecastData = requestForecastData(urls[0]);
             if ( reconnections > MAX_RETRIES ) {
                 Toast.makeText(mContext, NO_FORECAST, Toast.LENGTH_SHORT).show();
-                return NO_FORECAST;
+                break;
             }
         }
 
         timestamp = Calendar.getInstance();
 
-        String forecast_str = makeForecastString(forecastData);
-
-        Log.d(TAG, forecast_str);
-        return forecast_str;
+        return forecastData;
     }
 
     protected String makeForecastString(JSONObject forecastData) {
-        int forecast_index=0;
-
-        while ( getWaveHeight(forecastData).get(forecast_index) == 0.0 )
-            forecast_index++;
+        int forecast_index = getForecastIndex(forecastData);
 
         return String.format("Waves: %.1fm %s\nWind: %.0f-%.0fkn %s",
                 getWaveHeight(forecastData).get(forecast_index),
@@ -82,6 +77,21 @@ public class WgParser extends AsyncTask<String, Void, String> {
                 getWindSpeed(forecastData).get(forecast_index),
                 getWindGustSpeed(forecastData).get(forecast_index),
                 parseDirection(getWindDirection(forecastData).get(forecast_index)));
+    }
+
+    protected String makeTemperatureString(JSONObject forecastData) {
+        int forecast_index = getForecastIndex(forecastData);
+
+        return String.format("%.0f \u00b0C", getTemperature(forecastData).get(forecast_index) );
+    }
+
+    protected int getForecastIndex(JSONObject forecastData) {
+        int forecast_index=0;
+
+        while ( getWaveHeight(forecastData).get(forecast_index) == 0.0 )
+            forecast_index++;
+
+        return forecast_index;
     }
 
     protected ArrayList<Double> getWaveHeight(JSONObject forecast) { return getArrayFromForecast(forecast, "HTSGW"); }
@@ -172,9 +182,12 @@ public class WgParser extends AsyncTask<String, Void, String> {
         return res;
     }
 
-    protected void onPostExecute(String str) {
-        if ( !str.equals(NO_FORECAST) ) {
-            delegate.processFinish(mContext, str, timestamp);
+    protected void onPostExecute(JSONObject forecastData) {
+        if ( forecastData != null ) {
+            delegate.processFinish(mContext,
+                    makeForecastString(forecastData),
+                    makeTemperatureString(forecastData),
+                    timestamp);
         }
     }
 
