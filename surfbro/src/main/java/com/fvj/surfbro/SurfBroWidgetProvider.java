@@ -22,6 +22,7 @@ public class SurfBroWidgetProvider extends AppWidgetProvider implements AsyncRes
     @Override
     public void onReceive(Context context, Intent intent) {
         if (intent.getAction().equals(LOGO_CLICKED)) {
+            Toast.makeText(context, "Refreshing...", Toast.LENGTH_SHORT).show();
             callForRefresh(context);
         }
         super.onReceive(context, intent);
@@ -41,7 +42,6 @@ public class SurfBroWidgetProvider extends AppWidgetProvider implements AsyncRes
     }
 
     protected void callForRefresh(Context context) {
-        Toast.makeText(context, "Refreshing...", Toast.LENGTH_SHORT).show();
         WgParser parser = new WgParser(context);
         parser.delegate = this;
         parser.execute("http://www.windguru.cz/pt/index.php?sc=105160");

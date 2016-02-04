@@ -16,8 +16,8 @@ import java.util.Iterator;
 
 /**
  * Created by fvj on 02/02/2016.
- * <p/>
- * <p/>
+ *
+ *
  * initial_timestamp = "initstamp"
  * day = "hr_d"
  * hour = "hr_h"
@@ -76,7 +76,7 @@ public class WgParser extends AsyncTask<String, Void, String> {
         while ( getWaveHeight(forecastData).get(forecast_index) == 0.0 )
             forecast_index++;
 
-        return String.format("Waves: %.1fm %s\nWind: %.0f(%.0f)kn %s",
+        return String.format("Waves: %.1fm %s\nWind: %.0f-%.0fkn %s",
                 getWaveHeight(forecastData).get(forecast_index),
                 parseDirection(getWaveDirection(forecastData).get(forecast_index)),
                 getWindSpeed(forecastData).get(forecast_index),
