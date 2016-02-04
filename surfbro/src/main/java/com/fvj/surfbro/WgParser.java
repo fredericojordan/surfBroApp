@@ -86,20 +86,38 @@ public class WgParser extends AsyncTask<String, Void, JSONObject> {
     }
 
     protected int getForecastIndex(JSONObject forecastData) {
-        int forecast_index=0;
+        long initial_timestamp = getInitialTimestamp(forecastData)*1000;
+        long now_timestamp = Calendar.getInstance().getTimeInMillis();
 
-        while ( getWaveHeight(forecastData).get(forecast_index) == 0.0 )
-            forecast_index++;
+        int diff = (int) (now_timestamp-initial_timestamp);
 
-        return forecast_index;
+        return (int) (diff/10800000.0);
     }
 
+    protected int getInitialTimestamp(JSONObject forecast) { return getIntFromForecast(forecast, "initstamp"); }
     protected ArrayList<Double> getWaveHeight(JSONObject forecast) { return getArrayFromForecast(forecast, "HTSGW"); }
     protected ArrayList<Double> getWaveDirection(JSONObject forecast) { return getArrayFromForecast(forecast, "DIRPW"); }
     protected ArrayList<Double> getWindSpeed(JSONObject forecast) { return getArrayFromForecast(forecast, "WINDSPD"); }
     protected ArrayList<Double> getWindGustSpeed(JSONObject forecast) { return getArrayFromForecast(forecast, "GUST"); }
     protected ArrayList<Double> getWindDirection(JSONObject forecast) { return getArrayFromForecast(forecast, "WINDDIR"); }
     protected ArrayList<Double> getTemperature(JSONObject forecast) { return getArrayFromForecast(forecast, "TMPE"); }
+
+    protected int getIntFromForecast(JSONObject forecast, String key) {
+        try {
+            if (forecast.has(key)) {
+                Log.d(TAG, String.format("Forecast has key {%s}", key));
+                Log.d(TAG, String.format("%s: %d", key, forecast.getInt(key)));
+                return forecast.getInt(key);
+            } else {
+                Log.w(TAG, String.format("FORECAST DOES NOT HAVE KEY {%s}", key));
+                return -1;
+            }
+        } catch (Exception e) {
+            if (e.getMessage() != null) Log.e(TAG, e.getMessage());
+            e.printStackTrace();
+            return -1;
+        }
+    }
 
     protected ArrayList<Double> getArrayFromForecast(JSONObject forecast, String key) {
         try {
