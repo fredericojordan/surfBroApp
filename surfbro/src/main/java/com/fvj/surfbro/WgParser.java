@@ -5,6 +5,8 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.fvj.surfbro.util.WaveRanker;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -85,7 +87,7 @@ public class WgParser extends AsyncTask<String, Void, JSONObject> {
         return String.format("%.0f \u00b0C", getTemperature(forecastData).get(forecast_index) );
     }
 
-    protected int getForecastIndex(JSONObject forecastData) {
+    static public int getForecastIndex(JSONObject forecastData) {
         long initial_timestamp = getInitialTimestamp(forecastData)*1000;
         long now_timestamp = Calendar.getInstance().getTimeInMillis();
 
@@ -94,15 +96,15 @@ public class WgParser extends AsyncTask<String, Void, JSONObject> {
         return (int) (diff/10800000.0);
     }
 
-    protected int getInitialTimestamp(JSONObject forecast) { return getIntFromForecast(forecast, "initstamp"); }
-    protected ArrayList<Double> getWaveHeight(JSONObject forecast) { return getArrayFromForecast(forecast, "HTSGW"); }
-    protected ArrayList<Double> getWaveDirection(JSONObject forecast) { return getArrayFromForecast(forecast, "DIRPW"); }
-    protected ArrayList<Double> getWindSpeed(JSONObject forecast) { return getArrayFromForecast(forecast, "WINDSPD"); }
-    protected ArrayList<Double> getWindGustSpeed(JSONObject forecast) { return getArrayFromForecast(forecast, "GUST"); }
-    protected ArrayList<Double> getWindDirection(JSONObject forecast) { return getArrayFromForecast(forecast, "WINDDIR"); }
-    protected ArrayList<Double> getTemperature(JSONObject forecast) { return getArrayFromForecast(forecast, "TMPE"); }
+    static protected int getInitialTimestamp(JSONObject forecast) { return getIntFromForecast(forecast, "initstamp"); }
+    static public ArrayList<Double> getWaveHeight(JSONObject forecast) { return getArrayFromForecast(forecast, "HTSGW"); }
+    static public ArrayList<Double> getWaveDirection(JSONObject forecast) { return getArrayFromForecast(forecast, "DIRPW"); }
+    static public ArrayList<Double> getWindSpeed(JSONObject forecast) { return getArrayFromForecast(forecast, "WINDSPD"); }
+    static public ArrayList<Double> getWindGustSpeed(JSONObject forecast) { return getArrayFromForecast(forecast, "GUST"); }
+    static public ArrayList<Double> getWindDirection(JSONObject forecast) { return getArrayFromForecast(forecast, "WINDDIR"); }
+    static public ArrayList<Double> getTemperature(JSONObject forecast) { return getArrayFromForecast(forecast, "TMPE"); }
 
-    protected int getIntFromForecast(JSONObject forecast, String key) {
+    static protected int getIntFromForecast(JSONObject forecast, String key) {
         try {
             if (forecast.has(key)) {
                 Log.d(TAG, String.format("Forecast has key {%s}", key));
@@ -119,7 +121,7 @@ public class WgParser extends AsyncTask<String, Void, JSONObject> {
         }
     }
 
-    protected ArrayList<Double> getArrayFromForecast(JSONObject forecast, String key) {
+    static protected ArrayList<Double> getArrayFromForecast(JSONObject forecast, String key) {
         try {
             if (forecast.has(key)) {
                 Log.d(TAG, String.format("Forecast has key {%s}", key));
@@ -137,7 +139,7 @@ public class WgParser extends AsyncTask<String, Void, JSONObject> {
         }
     }
 
-    protected ArrayList<Double> parseArray(JSONArray array_in) {
+    static protected ArrayList<Double> parseArray(JSONArray array_in) {
         try {
             ArrayList<Double> list = new ArrayList<Double>();
             for (int i = 0; i < array_in.length(); i++) {
@@ -203,13 +205,14 @@ public class WgParser extends AsyncTask<String, Void, JSONObject> {
     protected void onPostExecute(JSONObject forecastData) {
         if ( forecastData != null ) {
             delegate.processFinish(mContext,
+                    WaveRanker.rank(forecastData),
                     makeForecastString(forecastData),
                     makeTemperatureString(forecastData),
                     timestamp);
         }
     }
 
-    protected String parseDirection(double dir) {
+    static protected String parseDirection(double dir) {
         if (dir >= 337.5 || dir < 22.5)
             return "N";
         if (dir >= 22.5 && dir < 67.5)

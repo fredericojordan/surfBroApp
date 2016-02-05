@@ -12,12 +12,15 @@ import android.content.Intent;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
+import com.fvj.surfbro.util.ColorRange;
+
 import java.util.Calendar;
 
 public class SurfBroWidgetProvider extends AppWidgetProvider implements AsyncResponse {
 
     private static final String TAG = "WidgetProvider";
     private static final String LOGO_CLICKED = "com.fvj.surfbro.LOGO_CLICKED";
+    private ColorRange textColorRange = new ColorRange("#ffff0000", "#ff00ff00");
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -59,16 +62,19 @@ public class SurfBroWidgetProvider extends AppWidgetProvider implements AsyncRes
         return PendingIntent.getBroadcast(context, 0, intent, 0);
     }
 
-    public void processFinish(Context context, String forecast_output, String temperature_output, Calendar timestamp) {
+    public void processFinish(Context context, double rank, String forecast_output, String temperature_output, Calendar timestamp) {
 
         ComponentName name = new ComponentName(context, SurfBroWidgetProvider.class);
         int widget_id = AppWidgetManager.getInstance(context).getAppWidgetIds(name)[0];
 
         RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.surf_bro_widget);
         remoteViews.setTextViewText(R.id.forecast_text, forecast_output);
+
         remoteViews.setTextViewText(R.id.temperature_text, temperature_output);
         remoteViews.setTextViewText(R.id.date_text, String.format("%02d/%02d", timestamp.get(Calendar.DAY_OF_MONTH), timestamp.get(Calendar.MONTH)+1));
         remoteViews.setTextViewText(R.id.time_text, String.format("%02d:%02d", timestamp.get(Calendar.HOUR_OF_DAY), timestamp.get(Calendar.MINUTE)));
+        remoteViews.setTextViewText(R.id.rank_text, String.format("%.1f", 10*rank));
+        remoteViews.setTextColor(R.id.rank_text, textColorRange.getHSVInterpolation(100 * rank));
 
         AppWidgetManager.getInstance( context ).updateAppWidget(widget_id, remoteViews);
     }
