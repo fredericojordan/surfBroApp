@@ -73,7 +73,8 @@ public class WgParser extends AsyncTask<String, Void, JSONObject> {
     protected String makeForecastString(JSONObject forecastData) {
         int forecast_index = getForecastIndex(forecastData);
 
-        return String.format("Waves: %.1fm %s\nWind: %.0f-%.0fkn %s",
+//        return String.format("Waves: %.1fm %s\nWind: %.0f-%.0fkn %s",
+        return String.format("%.1fm %s\n%.0f-%.0fkn %s",
                 getWaveHeight(forecastData).get(forecast_index),
                 parseDirection(getWaveDirection(forecastData).get(forecast_index)),
                 getWindSpeed(forecastData).get(forecast_index),
