@@ -70,13 +70,19 @@ public class WgParser extends AsyncTask<String, Void, JSONObject> {
         return forecastData;
     }
 
-    protected String makeForecastString(JSONObject forecastData) {
+    protected String makeWaveString(JSONObject forecastData) {
         int forecast_index = getForecastIndex(forecastData);
 
-//        return String.format("Waves: %.1fm %s\nWind: %.0f-%.0fkn %s",
-        return String.format("%.1fm %s\n%.0f-%.0fkn %s",
+        return String.format("%.1fm %s (%.0fs)",
                 getWaveHeight(forecastData).get(forecast_index),
                 parseDirection(getWaveDirection(forecastData).get(forecast_index)),
+                getWavePeriod(forecastData).get(forecast_index));
+    }
+
+    protected String makeWindString(JSONObject forecastData) {
+        int forecast_index = getForecastIndex(forecastData);
+
+        return String.format("%.0f-%.0fkn %s",
                 getWindSpeed(forecastData).get(forecast_index),
                 getWindGustSpeed(forecastData).get(forecast_index),
                 parseDirection(getWindDirection(forecastData).get(forecast_index)));
@@ -92,14 +98,16 @@ public class WgParser extends AsyncTask<String, Void, JSONObject> {
         long initial_timestamp = getInitialTimestamp(forecastData)*1000;
         long now_timestamp = Calendar.getInstance().getTimeInMillis();
 
-        int diff = (int) (now_timestamp-initial_timestamp);
+        int millis_diff = (int) (now_timestamp-initial_timestamp);
 
-        return (int) (diff/10800000.0);
+        double _3H_IN_MILLIS = 10800000.0;
+        return (int) (millis_diff/_3H_IN_MILLIS);
     }
 
     static protected int getInitialTimestamp(JSONObject forecast) { return getIntFromForecast(forecast, "initstamp"); }
     static public ArrayList<Double> getWaveHeight(JSONObject forecast) { return getArrayFromForecast(forecast, "HTSGW"); }
     static public ArrayList<Double> getWaveDirection(JSONObject forecast) { return getArrayFromForecast(forecast, "DIRPW"); }
+    static public ArrayList<Double> getWavePeriod(JSONObject forecast) { return getArrayFromForecast(forecast, "PERPW"); }
     static public ArrayList<Double> getWindSpeed(JSONObject forecast) { return getArrayFromForecast(forecast, "WINDSPD"); }
     static public ArrayList<Double> getWindGustSpeed(JSONObject forecast) { return getArrayFromForecast(forecast, "GUST"); }
     static public ArrayList<Double> getWindDirection(JSONObject forecast) { return getArrayFromForecast(forecast, "WINDDIR"); }
@@ -207,7 +215,8 @@ public class WgParser extends AsyncTask<String, Void, JSONObject> {
         if ( forecastData != null ) {
             delegate.processFinish(mContext,
                     WaveRanker.rank(forecastData),
-                    makeForecastString(forecastData),
+                    makeWaveString(forecastData),
+                    makeWindString(forecastData),
                     makeTemperatureString(forecastData),
                     timestamp);
         }

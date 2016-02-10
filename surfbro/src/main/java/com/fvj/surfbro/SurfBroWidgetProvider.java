@@ -62,13 +62,14 @@ public class SurfBroWidgetProvider extends AppWidgetProvider implements AsyncRes
         return PendingIntent.getBroadcast(context, 0, intent, 0);
     }
 
-    public void processFinish(Context context, double rank, String forecast_output, String temperature_output, Calendar timestamp) {
+    public void processFinish(Context context, double rank, String wave_output, String wind_output, String temperature_output, Calendar timestamp) {
 
         ComponentName name = new ComponentName(context, SurfBroWidgetProvider.class);
         int widget_id = AppWidgetManager.getInstance(context).getAppWidgetIds(name)[0];
 
         RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.surf_bro_widget);
-        remoteViews.setTextViewText(R.id.forecast_text, forecast_output);
+        remoteViews.setTextViewText(R.id.wave_forecast_text, wave_output);
+        remoteViews.setTextViewText(R.id.wind_forecast_text, wind_output);
 
         remoteViews.setTextViewText(R.id.temperature_text, temperature_output);
         remoteViews.setTextViewText(R.id.date_text, String.format("%02d/%02d", timestamp.get(Calendar.DAY_OF_MONTH), timestamp.get(Calendar.MONTH)+1));
