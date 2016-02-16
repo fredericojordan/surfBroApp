@@ -16,7 +16,7 @@ public class ColorRange {
     }
 
     private double getProportion(double value) {
-        double p = (value-70.0) / 30.0;
+        double p = (value-60.0) / 40.0;
         if (p<0) p=0;
         return p;
     }

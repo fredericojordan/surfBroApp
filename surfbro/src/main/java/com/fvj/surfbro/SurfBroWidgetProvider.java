@@ -13,6 +13,8 @@ import android.widget.RemoteViews;
 import android.widget.Toast;
 
 import com.fvj.surfbro.util.ColorRange;
+import com.fvj.surfbro.util.Forecast;
+import com.fvj.surfbro.util.WaveRanker;
 
 import java.util.Calendar;
 
@@ -45,7 +47,7 @@ public class SurfBroWidgetProvider extends AppWidgetProvider implements AsyncRes
     }
 
     protected void callForRefresh(Context context) {
-        WgParser parser = new WgParser(context);
+        WgRequester parser = new WgRequester(context);
         parser.delegate = this;
         parser.execute("http://www.windguru.cz/pt/index.php?sc=105160");
     }
@@ -62,18 +64,26 @@ public class SurfBroWidgetProvider extends AppWidgetProvider implements AsyncRes
         return PendingIntent.getBroadcast(context, 0, intent, 0);
     }
 
-    public void processFinish(Context context, double rank, String wave_output, String wind_output, String temperature_output, Calendar timestamp) {
+    public void processFinish(Context context, Forecast forecast) {
 
         ComponentName name = new ComponentName(context, SurfBroWidgetProvider.class);
         int widget_id = AppWidgetManager.getInstance(context).getAppWidgetIds(name)[0];
 
         RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.surf_bro_widget);
-        remoteViews.setTextViewText(R.id.wave_forecast_text, wave_output);
-        remoteViews.setTextViewText(R.id.wind_forecast_text, wind_output);
+        remoteViews.setTextViewText(R.id.wave_forecast_text, forecast.makeWaveString());
+        remoteViews.setTextViewText(R.id.wind_forecast_text, forecast.makeWindString());
 
-        remoteViews.setTextViewText(R.id.temperature_text, temperature_output);
-        remoteViews.setTextViewText(R.id.date_text, String.format("%02d/%02d", timestamp.get(Calendar.DAY_OF_MONTH), timestamp.get(Calendar.MONTH)+1));
-        remoteViews.setTextViewText(R.id.time_text, String.format("%02d:%02d", timestamp.get(Calendar.HOUR_OF_DAY), timestamp.get(Calendar.MINUTE)));
+        remoteViews.setTextViewText(R.id.temperature_text, forecast.makeTemperatureString());
+
+        remoteViews.setTextViewText(R.id.date_text, String.format("%02d/%02d",
+                forecast.timestamp.get(Calendar.DAY_OF_MONTH),
+                forecast.timestamp.get(Calendar.MONTH)+1));
+
+        remoteViews.setTextViewText(R.id.time_text, String.format("%02d:%02d",
+                forecast.timestamp.get(Calendar.HOUR_OF_DAY),
+                forecast.timestamp.get(Calendar.MINUTE)));
+
+        double rank = WaveRanker.rank(forecast);
         remoteViews.setTextViewText(R.id.rank_text, String.format("%.1f", 10*rank));
         remoteViews.setTextColor(R.id.rank_text, textColorRange.getHSVInterpolation(100 * rank));
 

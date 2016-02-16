@@ -2,10 +2,6 @@ package com.fvj.surfbro.util;
 
 import android.util.Log;
 
-import com.fvj.surfbro.WgParser;
-
-import org.json.JSONObject;
-
 /**
  * Created by fvj on 05/02/2016.
  */
@@ -16,10 +12,10 @@ public class WaveRanker {
     static private double WAVE_CONSTANT = 2.5;
     static private double WIND_CONSTANT = 0.0015;
 
-    static public double rank(JSONObject forecastData) {
-        double temperature_rank = temp_rank(WgParser.getTemperature(forecastData).get(WgParser.getForecastIndex(forecastData)));
-        double wave_height_rank = wave_rank(WgParser.getWaveHeight(forecastData).get(WgParser.getForecastIndex(forecastData)));
-        double wind_speed_rank = wind_rank(WgParser.getWindSpeed(forecastData).get(WgParser.getForecastIndex(forecastData)));
+    static public double rank(Forecast forecast) {
+        double temperature_rank = temp_rank(forecast.getTemperatureNow());
+        double wave_height_rank = wave_rank(forecast.getWaveHeightNow());
+        double wind_speed_rank = wind_rank(forecast.getWindSpeedNow());
 
         Log.d(TAG, String.format("Temperature rank: %.3f - Wave rank: %.3f - Wind rank: %.3f",
                 temperature_rank,
