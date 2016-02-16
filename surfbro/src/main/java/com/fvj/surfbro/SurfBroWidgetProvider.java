@@ -70,8 +70,12 @@ public class SurfBroWidgetProvider extends AppWidgetProvider implements AsyncRes
         int widget_id = AppWidgetManager.getInstance(context).getAppWidgetIds(name)[0];
 
         RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.surf_bro_widget);
+
         remoteViews.setTextViewText(R.id.wave_forecast_text, forecast.makeWaveString());
+        remoteViews.setTextColor(R.id.wave_forecast_text, textColorRange.getHSVInterpolation(WaveRanker.wave_rank(forecast.getWaveHeightNow()), 0.6, 1));
+
         remoteViews.setTextViewText(R.id.wind_forecast_text, forecast.makeWindString());
+        remoteViews.setTextColor(R.id.wind_forecast_text, textColorRange.getHSVInterpolation(WaveRanker.wind_rank(forecast.getWindGustSpeedNow()), 0.6, 1));
 
         remoteViews.setTextViewText(R.id.temperature_text, forecast.makeTemperatureString());
 
@@ -85,7 +89,7 @@ public class SurfBroWidgetProvider extends AppWidgetProvider implements AsyncRes
 
         double rank = WaveRanker.rank(forecast);
         remoteViews.setTextViewText(R.id.rank_text, String.format("%.1f", 10*rank));
-        remoteViews.setTextColor(R.id.rank_text, textColorRange.getHSVInterpolation(100 * rank));
+        remoteViews.setTextColor(R.id.rank_text, textColorRange.getHSVInterpolation(rank, 0.6, 1));
 
         AppWidgetManager.getInstance( context ).updateAppWidget(widget_id, remoteViews);
     }

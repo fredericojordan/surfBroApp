@@ -15,16 +15,17 @@ public class ColorRange {
         this.color100 = Color.parseColor(color100);
     }
 
-    private double getProportion(double value) {
-        double p = (value-60.0) / 40.0;
-        if (p<0) p=0;
-        return p;
+    public int getHSVInterpolation(double value, double min, double max) {
+        if (value<=min)
+            return getHSVInterpolation(0.0);
+        if (value>=max)
+            return getHSVInterpolation(1.0);
+
+        double p = (value-min)/(max-min);
+        return getHSVInterpolation(p);
     }
 
-    public int getHSVInterpolation(double value) {
-
-        double p = getProportion(value);
-
+    public int getHSVInterpolation(double proportion) {
         float[] color0_hsv = new float[3];
         float[] color100_hsv = new float[3];
         float[] result_hsv = new float[3];
@@ -32,21 +33,28 @@ public class ColorRange {
         Color.colorToHSV(color0, color0_hsv);
         Color.colorToHSV(color100, color100_hsv);
 
-        int A = (int) (p * Color.alpha(color100) + (1 - p) * Color.alpha(color0));
+        int A = (int) (proportion * Color.alpha(color100) + (1 - proportion) * Color.alpha(color0));
         for (int i=0; i<3; i++)
-            result_hsv[i] = (float) (p * color100_hsv[i] + (1 - p) * color0_hsv[i]);
+            result_hsv[i] = (float) (proportion * color100_hsv[i] + (1 - proportion) * color0_hsv[i]);
 
         return Color.HSVToColor(A, result_hsv);
     }
 
-    public int getRGBInterpolation(double value) {
+    public int getRGBInterpolation(double value, double min, double max) {
+        if (value<=min)
+            return getRGBInterpolation(0.0);
+        if (value>=max)
+            return getRGBInterpolation(1.0);
 
-        double p = getProportion(value);
+        double p = (value-min)/(max-min);
+        return getRGBInterpolation(p);
+    }
 
-        int A = (int) (p * Color.alpha(color100) + (1 - p) * Color.alpha(color0));
-        int R = (int) (p * Color.red(color100) + (1 - p) * Color.red(color0));
-        int G = (int) (p * Color.green(color100) + (1 - p) * Color.green(color0));
-        int B = (int) (p * Color.blue(color100) + (1 - p) * Color.blue(color0));
+    public int getRGBInterpolation(double proportion) {
+        int A = (int) (proportion * Color.alpha(color100) + (1 - proportion) * Color.alpha(color0));
+        int R = (int) (proportion * Color.red(color100) + (1 - proportion) * Color.red(color0));
+        int G = (int) (proportion * Color.green(color100) + (1 - proportion) * Color.green(color0));
+        int B = (int) (proportion * Color.blue(color100) + (1 - proportion) * Color.blue(color0));
 
         return Color.argb(A, R, G, B);
     }
