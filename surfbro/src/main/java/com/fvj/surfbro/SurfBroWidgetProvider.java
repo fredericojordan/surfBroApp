@@ -71,11 +71,17 @@ public class SurfBroWidgetProvider extends AppWidgetProvider implements AsyncRes
 
         RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.surf_bro_widget);
 
+        int wave_color = textColorRange.getHSVInterpolation(WaveRanker.wave_rank(forecast.getWaveHeightNow()), 0.7, 1);
         remoteViews.setTextViewText(R.id.wave_forecast_text, forecast.makeWaveString());
-        remoteViews.setTextColor(R.id.wave_forecast_text, textColorRange.getHSVInterpolation(WaveRanker.wave_rank(forecast.getWaveHeightNow()), 0.6, 1));
+        remoteViews.setTextViewText(R.id.wave_add_text, forecast.makeWaveAdditionalString());
+        remoteViews.setTextColor(R.id.wave_forecast_text, wave_color);
+        remoteViews.setTextColor(R.id.wave_add_text, wave_color);
 
+        int wind_color = textColorRange.getHSVInterpolation(WaveRanker.wind_rank(forecast.getWindGustSpeedNow()), 0.7, 1);
         remoteViews.setTextViewText(R.id.wind_forecast_text, forecast.makeWindString());
-        remoteViews.setTextColor(R.id.wind_forecast_text, textColorRange.getHSVInterpolation(WaveRanker.wind_rank(forecast.getWindGustSpeedNow()), 0.6, 1));
+        remoteViews.setTextViewText(R.id.wind_add_text, forecast.makeWindAdditionalString());
+        remoteViews.setTextColor(R.id.wind_forecast_text, wind_color);
+        remoteViews.setTextColor(R.id.wind_add_text, wind_color);
 
         remoteViews.setTextViewText(R.id.temperature_text, forecast.makeTemperatureString());
 
@@ -88,8 +94,9 @@ public class SurfBroWidgetProvider extends AppWidgetProvider implements AsyncRes
                 forecast.timestamp.get(Calendar.MINUTE)));
 
         double rank = WaveRanker.rank(forecast);
-        remoteViews.setTextViewText(R.id.rank_text, String.format("%.1f", 10*rank));
-        remoteViews.setTextColor(R.id.rank_text, textColorRange.getHSVInterpolation(rank, 0.6, 1));
+        int rank_color = (textColorRange.getHSVInterpolation(rank, 0.7, 1)&0xffffff) + 0x44000000;
+        remoteViews.setTextViewText(R.id.rank_text, String.format("%.1f", 10 * rank));
+        remoteViews.setTextColor(R.id.rank_text, rank_color);
 
         AppWidgetManager.getInstance( context ).updateAppWidget(widget_id, remoteViews);
     }

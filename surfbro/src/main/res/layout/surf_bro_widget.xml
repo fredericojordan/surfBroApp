@@ -64,8 +64,27 @@
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:textColor="@color/board_text"
-                    android:textSize="25sp"
+                    android:textSize="@dimen/forecast_text_size"
                     android:textStyle="bold" />
+
+                <!-- ADD WAVE COL -->
+                <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:orientation="horizontal">
+
+                    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+                        android:id="@+id/wave_add_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:textColor="@color/board_text"
+                        android:textSize="@dimen/additional_forecast_text_size"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
             </LinearLayout>
 
             <!-- WIND COL -->
@@ -83,8 +102,27 @@
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:textColor="@color/board_text"
-                    android:textSize="25sp"
+                    android:textSize="@dimen/forecast_text_size"
                     android:textStyle="bold" />
+
+                <!-- ADD WIND COL -->
+                <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+                        android:id="@+id/wind_add_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:textColor="@color/board_text"
+                        android:textSize="@dimen/additional_forecast_text_size"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
             </LinearLayout>
         </LinearLayout>
 
@@ -103,7 +141,7 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:textColor="@color/board_text"
-                android:textSize="10sp" />
+                android:textSize="@dimen/additional_info_text_size" />
 
             <TextView xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/date_text"
@@ -112,7 +150,7 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:textColor="@color/board_text"
-                android:textSize="10sp" />
+                android:textSize="@dimen/additional_info_text_size" />
 
             <TextView xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/time_text"
@@ -121,7 +159,7 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:textColor="@color/board_text"
-                android:textSize="10sp" />
+                android:textSize="@dimen/additional_info_text_size" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>
