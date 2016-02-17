@@ -1,4 +1,4 @@
-package com.fvj.surfbro.util;
+package com.fvj.surfbro;
 
 import android.util.Log;
 
@@ -23,6 +23,7 @@ import java.util.Calendar;
  */
 
 public class Forecast {
+
     private static final String TAG = "Forecast";
 
     public JSONObject forecastData;

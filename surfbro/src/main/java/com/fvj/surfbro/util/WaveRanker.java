@@ -2,6 +2,8 @@ package com.fvj.surfbro.util;
 
 import android.util.Log;
 
+import com.fvj.surfbro.Forecast;
+
 /**
  * Created by fvj on 05/02/2016.
  */
