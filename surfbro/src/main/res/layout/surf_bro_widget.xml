@@ -28,7 +28,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:orientation="vertical">
 
             <TextView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -46,7 +46,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_weight="3"
+            android:layout_weight="7"
             android:orientation="horizontal">
 
             <!-- WAVE COL -->
@@ -54,7 +54,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_weight="1"
+                android:layout_weight="2"
                 android:orientation="vertical">
 
                 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -74,10 +74,17 @@
                     android:layout_gravity="center"
                     android:orientation="horizontal">
 
+                    <ImageView
+                        android:id="@+id/wave_direction"
+                        android:layout_width="0dp"
+                        android:layout_height="14dp"
+                        android:layout_weight="1" />
+
                     <TextView xmlns:android="http://schemas.android.com/apk/res/android"
                         android:id="@+id/wave_add_text"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_weight="1"
                         android:layout_gravity="center"
                         android:gravity="center"
                         android:textColor="@color/board_text"
@@ -92,7 +99,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_weight="1"
+                android:layout_weight="3"
                 android:orientation="vertical">
 
                 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -110,17 +117,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:orientation="vertical">
+                    android:orientation="horizontal">
 
-                    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-                        android:id="@+id/wind_add_text"
+                    <ImageView
+                        android:id="@+id/wind_direction"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:textColor="@color/board_text"
-                        android:textSize="@dimen/additional_forecast_text_size"
-                        android:textStyle="bold" />
+                        android:layout_height="14dp" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -131,7 +133,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:orientation="vertical">
 
             <TextView xmlns:android="http://schemas.android.com/apk/res/android"

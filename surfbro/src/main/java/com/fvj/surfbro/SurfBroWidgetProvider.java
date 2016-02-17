@@ -1,7 +1,4 @@
 package com.fvj.surfbro;
-/**
- * Created by fvj on 27/01/2016.
- */
 
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
@@ -9,6 +6,14 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.ColorFilter;
+import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
@@ -71,28 +76,55 @@ public class SurfBroWidgetProvider extends AppWidgetProvider implements AsyncRes
 
         RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.surf_bro_widget);
 
+        // -- Waves
         int wave_color = textColorRange.getHSVInterpolation(WaveRanker.wave_rank(forecast.getWaveHeightNow()), 0.7, 1);
         remoteViews.setTextViewText(R.id.wave_forecast_text, forecast.makeWaveString());
         remoteViews.setTextViewText(R.id.wave_add_text, forecast.makeWaveAdditionalString());
         remoteViews.setTextColor(R.id.wave_forecast_text, wave_color);
         remoteViews.setTextColor(R.id.wave_add_text, wave_color);
 
+        // -- Waves Dir
+        Matrix wind_matrix = new Matrix();
+        wind_matrix.postRotate(forecast.getWaveDirectionNow().floatValue());
+        Bitmap arrow = BitmapFactory.decodeResource(context.getResources(), R.drawable.arrow);
+        Bitmap wave_direction = Bitmap.createBitmap(arrow, 0, 0, arrow.getWidth(), arrow.getHeight(), wind_matrix, true);
+        Paint p = new Paint();
+        ColorFilter filter = new PorterDuffColorFilter(wave_color, PorterDuff.Mode.SRC_IN);
+        p.setColorFilter(filter);
+        Canvas canvas = new Canvas(wave_direction);
+        canvas.drawBitmap(wave_direction, new Matrix(), p);
+        remoteViews.setImageViewBitmap(R.id.wave_direction, wave_direction);
+
+        // -- Wind
         int wind_color = textColorRange.getHSVInterpolation(WaveRanker.wind_rank(forecast.getWindGustSpeedNow()), 0.7, 1);
         remoteViews.setTextViewText(R.id.wind_forecast_text, forecast.makeWindString());
-        remoteViews.setTextViewText(R.id.wind_add_text, forecast.makeWindAdditionalString());
         remoteViews.setTextColor(R.id.wind_forecast_text, wind_color);
-        remoteViews.setTextColor(R.id.wind_add_text, wind_color);
 
+        // -- Wind Dir
+        Matrix wave_matrix = new Matrix();
+        wave_matrix.postRotate(forecast.getWindDirectionNow().floatValue());
+        Bitmap arrow2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.arrow);
+        Bitmap wind_direction = Bitmap.createBitmap(arrow2, 0, 0, arrow.getWidth(), arrow.getHeight(), wave_matrix, true);
+        p = new Paint();
+        filter = new PorterDuffColorFilter(wind_color, PorterDuff.Mode.SRC_IN);
+        p.setColorFilter(filter);
+        canvas = new Canvas(wind_direction);
+        canvas.drawBitmap(wind_direction, new Matrix(), p);
+        remoteViews.setImageViewBitmap(R.id.wind_direction, wind_direction);
+
+        // -- Temperature
         remoteViews.setTextViewText(R.id.temperature_text, forecast.makeTemperatureString());
 
+        // -- Date
         remoteViews.setTextViewText(R.id.date_text, String.format("%02d/%02d",
                 forecast.timestamp.get(Calendar.DAY_OF_MONTH),
-                forecast.timestamp.get(Calendar.MONTH)+1));
+                forecast.timestamp.get(Calendar.MONTH) + 1));
 
         remoteViews.setTextViewText(R.id.time_text, String.format("%02d:%02d",
                 forecast.timestamp.get(Calendar.HOUR_OF_DAY),
                 forecast.timestamp.get(Calendar.MINUTE)));
 
+        // -- Rank
         double rank = WaveRanker.rank(forecast);
         int rank_color = (textColorRange.getHSVInterpolation(rank, 0.7, 1)&0xffffff) + 0x44000000;
         remoteViews.setTextViewText(R.id.rank_text, String.format("%.1f", 10 * rank));

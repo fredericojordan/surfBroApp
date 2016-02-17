@@ -33,35 +33,14 @@ public class Forecast {
         this.timestamp = timestamp;
     }
 
-    public String makeWaveString() {
-        return String.format("%.1fm", getWaveHeight().get(getForecastIndex()));
-    }
+    public String makeWaveString() { return String.format("%.1fm", getWaveHeightNow()); }
+    public String makeWaveAdditionalString() { return String.format("%.0fs", getWavePeriodNow()); }
+    public String makeTemperatureString() { return String.format("%.0f \u00b0C", getTemperatureNow()); }
 
     public String makeWindString() {
         return String.format("%.0f-%.0fkn",
-                getWindSpeed().get(getForecastIndex()),
-                getWindGustSpeed().get(getForecastIndex()));
-    }
-
-    public String makeWaveAdditionalString() {
-        int forecast_index = getForecastIndex();
-
-        return String.format("%s %.0fs",
-                parseDirection(getWaveDirection().get(forecast_index)),
-                getWavePeriod().get(forecast_index));
-    }
-
-    public String makeWindAdditionalString() {
-        int forecast_index = getForecastIndex();
-
-        return String.format("%s",
-                parseDirection(getWindDirection().get(forecast_index)));
-    }
-
-    public String makeTemperatureString() {
-        int forecast_index = getForecastIndex();
-
-        return String.format("%.0f \u00b0C", getTemperature().get(forecast_index));
+                getWindSpeedNow(),
+                getWindGustSpeedNow());
     }
 
     public int getForecastIndex() {
