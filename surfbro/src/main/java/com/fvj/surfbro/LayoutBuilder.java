@@ -75,7 +75,7 @@ public class LayoutBuilder implements AsyncResponse {
 
     private void buildRankInfo(RemoteViews remoteViews) {
         double rank = WaveRanker.rank(forecast);
-        int rank_color = (textColorRange.getHSVInterpolation(rank, 0.7, 1) & 0xffffff) + 0x44000000;
+        int rank_color = textColorRange.getHSVInterpolation(rank, 0.7, 1) & 0x1fffffff;
         remoteViews.setTextViewText(R.id.rank_text, String.format("%.1f", 10 * rank));
         remoteViews.setTextColor(R.id.rank_text, rank_color);
     }
