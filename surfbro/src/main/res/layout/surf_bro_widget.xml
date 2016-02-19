@@ -54,7 +54,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_weight="2"
+                android:layout_weight="5"
                 android:orientation="vertical">
 
                 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -99,7 +99,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_weight="3"
+                android:layout_weight="6"
                 android:orientation="vertical">
 
                 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -122,7 +122,7 @@
                     <ImageView
                         android:id="@+id/wind_direction"
                         android:layout_width="match_parent"
-                        android:layout_height="14dp" />
+                        android:layout_height="15dp" />
                 </LinearLayout>
 
             </LinearLayout>
