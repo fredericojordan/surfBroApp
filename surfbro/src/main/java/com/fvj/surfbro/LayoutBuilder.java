@@ -19,7 +19,7 @@ import java.util.Calendar;
 
 public class LayoutBuilder implements AsyncResponse {
 
-    private ColorRange textColorRange = new ColorRange("#CC0000", "#00CC00");
+    private ColorRange textColorRange = new ColorRange("#cc0000", "#00cc00");
 
     private Context context;
     private Forecast forecast;
