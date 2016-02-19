@@ -12,10 +12,11 @@ import org.jsoup.nodes.Document;
 import java.util.Calendar;
 import java.util.Iterator;
 
-public class WgRequester extends AsyncTask<String, Void, Forecast> {
+public class WgRequester extends AsyncTask<Integer, Void, Forecast> {
 
     private static final String TAG = "WgRequester";
     private static final String NO_FORECAST = "No forecast!";
+    private static final String URL_ROOT = "http://www.windguru.cz/pt/index.php?sc=";
     private static final int MAX_RETRIES = 5;
 
     public AsyncResponse delegate = null;
@@ -26,17 +27,18 @@ public class WgRequester extends AsyncTask<String, Void, Forecast> {
         this.mContext = context;
     }
 
-    protected Forecast doInBackground(String... urls) {
-        return getForecast(urls);
+    protected Forecast doInBackground(Integer... locationId) {
+        return getForecast(locationId[0]);
     }
 
-    protected Forecast getForecast(String... urls) { // FIXME return value when broken
+    protected Forecast getForecast(Integer locationId) { // FIXME return value when broken
         JSONObject forecastData = null;
         int reconnections = 0;
 
         while ( forecastData == null ) {
-            Log.d(TAG, String.format("Connection attempt #%d", ++reconnections));
-            forecastData = requestForecastData(urls[0]);
+            Log.d(TAG, String.format("Connection attempt #%d - locationID:%d", ++reconnections, locationId));
+            String url = String.format("%s%d", URL_ROOT, locationId);
+            forecastData = requestForecastData(url);
             if ( reconnections > MAX_RETRIES ) {
                 Toast.makeText(mContext, NO_FORECAST, Toast.LENGTH_SHORT).show();
                 break;

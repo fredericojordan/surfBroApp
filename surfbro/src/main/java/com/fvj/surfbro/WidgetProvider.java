@@ -39,7 +39,8 @@ public class WidgetProvider extends AppWidgetProvider {
     protected void callForRefresh(Context context) {
         WgRequester parser = new WgRequester(context);
         parser.delegate = layoutBuilder;
-        parser.execute("http://www.windguru.cz/pt/index.php?sc=105160");
+        Integer floripaId = context.getResources().getInteger(R.integer.Floripa);
+        parser.execute(floripaId);
     }
 
     protected void setupClickIntent(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="widget_margin">8dp</dimen>
-    <dimen name="forecast_text_size">28sp</dimen>
+    <dimen name="forecast_text_size">26sp</dimen>
     <dimen name="additional_forecast_text_size">12sp</dimen>
     <dimen name="additional_info_text_size">10sp</dimen>
 </resources>
