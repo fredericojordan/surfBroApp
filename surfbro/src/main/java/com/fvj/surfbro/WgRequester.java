@@ -52,7 +52,9 @@ public class WgRequester extends AsyncTask<Integer, Void, Forecast> {
 
     protected JSONObject requestForecastData(String url) {
         try {
+            Log.d(TAG, "Jsoup REQUEST");
             Document doc = Jsoup.connect(url).get();
+            Log.d(TAG, "Jsoup RECEIVE");
             String data = doc.select("div[id=div_wgfcst1]").select("script").html();
             Log.d(TAG, String.format("Forecast data length = %d", data.length()));
             Log.d(TAG, data);

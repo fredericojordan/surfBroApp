@@ -61,6 +61,8 @@ public class LayoutBuilder implements AsyncResponse {
 
     private void buildTemperatureInfo(RemoteViews remoteViews) {
         remoteViews.setTextViewText(R.id.temperature_text, forecast.makeTemperatureString());
+        int temperature_color = textColorRange.getHSVInterpolation(forecast.getTemperatureNow(), 14, 28);
+        remoteViews.setTextColor(R.id.temperature_text, temperature_color);
     }
 
     private void buildDateTimeInfo(RemoteViews remoteViews) {
