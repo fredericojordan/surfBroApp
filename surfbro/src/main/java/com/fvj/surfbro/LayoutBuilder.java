@@ -19,7 +19,8 @@ import java.util.Calendar;
 
 public class LayoutBuilder implements AsyncResponse {
 
-    private ColorRange textColorRange = new ColorRange("#cc0000", "#00cc00");
+    private ColorRange forecastColorRange = new ColorRange("#cc0000", "#00cc00");
+    private ColorRange temperatureColorRange = new ColorRange("#0000cc", "#cc0000");
 
     private Context context;
     private Forecast forecast;
@@ -42,7 +43,7 @@ public class LayoutBuilder implements AsyncResponse {
     }
 
     private void buildWaveInfo(RemoteViews remoteViews) {
-        int wave_color = textColorRange.getHSVInterpolation(WaveRanker.wave_rank(forecast.getWaveHeightNow()), 0.7, 1);
+        int wave_color = forecastColorRange.getHSVInterpolation(WaveRanker.wave_rank(forecast.getWaveHeightNow()), 0.7, 1);
         remoteViews.setTextViewText(R.id.wave_forecast_text, forecast.makeWaveString());
         remoteViews.setTextViewText(R.id.wave_add_text, forecast.makeWaveAdditionalString());
         remoteViews.setTextColor(R.id.wave_forecast_text, wave_color);
@@ -52,7 +53,7 @@ public class LayoutBuilder implements AsyncResponse {
     }
 
     private void buildWindInfo(RemoteViews remoteViews) {
-        int wind_color = textColorRange.getHSVInterpolation(WaveRanker.wind_rank(forecast.getWindGustSpeedNow()), 0.7, 1);
+        int wind_color = forecastColorRange.getHSVInterpolation(WaveRanker.wind_rank(forecast.getWindGustSpeedNow()), 0.7, 1);
         remoteViews.setTextViewText(R.id.wind_forecast_text, forecast.makeWindString());
         remoteViews.setTextColor(R.id.wind_forecast_text, wind_color);
         Bitmap wind_direction = generateDirectionArrow(forecast.getWindDirectionNow(), wind_color);
@@ -61,7 +62,7 @@ public class LayoutBuilder implements AsyncResponse {
 
     private void buildTemperatureInfo(RemoteViews remoteViews) {
         remoteViews.setTextViewText(R.id.temperature_text, forecast.makeTemperatureString());
-        int temperature_color = textColorRange.getHSVInterpolation(forecast.getTemperatureNow(), 14, 28);
+        int temperature_color = temperatureColorRange.getHSVInterpolation(forecast.getTemperatureNow(), 10, 34);
         remoteViews.setTextColor(R.id.temperature_text, temperature_color);
     }
 
@@ -77,7 +78,7 @@ public class LayoutBuilder implements AsyncResponse {
 
     private void buildRankInfo(RemoteViews remoteViews) {
         double rank = WaveRanker.rank(forecast);
-        int rank_color = textColorRange.getHSVInterpolation(rank, 0.7, 1) & 0x1fffffff;
+        int rank_color = forecastColorRange.getHSVInterpolation(rank, 0.7, 1) & 0x1fffffff;
         remoteViews.setTextViewText(R.id.rank_text, String.format("%.1f", 10 * rank));
         remoteViews.setTextColor(R.id.rank_text, rank_color);
     }
