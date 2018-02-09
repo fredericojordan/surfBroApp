@@ -19,6 +19,9 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/surf_bro_widget_info" />
         </receiver>
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="4fbd4d966a1dfa82829d2b3b7624c6a0a52bedd4" />
 
     </application>
 </manifest>

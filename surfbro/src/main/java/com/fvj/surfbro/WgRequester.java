@@ -12,6 +12,9 @@ import org.jsoup.nodes.Document;
 import java.util.Calendar;
 import java.util.Iterator;
 
+import com.crashlytics.android.Crashlytics;
+import io.fabric.sdk.android.Fabric;
+
 public class WgRequester extends AsyncTask<Integer, Void, Forecast> {
 
     private static final String TAG = "WgRequester";
@@ -28,6 +31,7 @@ public class WgRequester extends AsyncTask<Integer, Void, Forecast> {
     }
 
     protected Forecast doInBackground(Integer... locationId) {
+        Fabric.with(this.mContext, new Crashlytics());
         return getForecast(locationId[0]);
     }
 
