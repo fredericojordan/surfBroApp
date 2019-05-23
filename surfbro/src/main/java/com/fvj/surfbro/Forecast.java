@@ -8,23 +8,10 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-/**
- * initial_timestamp = "initstamp"
- * day = "hr_d"
- * hour = "hr_h"
- * timezone_id = "tzid"
- * temperature = "TMPE"
- * wave_height = "HTSGW"
- * wave_period = "PERPW"
- * wave_direction = "DIRPW"
- * wind_speed = "WINDSPD"
- * wind_gust = "GUST"
- * wind_direction = "WINDDIR"
- */
 
 public class Forecast {
 
-    private static final String TAG = "Forecast";
+    private static final String TAG = "surfBro-Forecast";
 
     public JSONObject forecastData;
     public Calendar timestamp;
@@ -44,49 +31,21 @@ public class Forecast {
                 getWindGustSpeedNow());
     }
 
-    public int getForecastIndex() {
-        long initial_timestamp = getInitialTimestamp() * 1000;
-        long now_timestamp = Calendar.getInstance().getTimeInMillis();
+    public ArrayList<Double> getWaveHeight() { return getArrayFromForecast(forecastData, "wave_height"); }
+    public ArrayList<Double> getWaveDirection() { return getArrayFromForecast(forecastData, "wave_direction"); }
+    public ArrayList<Double> getWavePeriod() { return getArrayFromForecast(forecastData, "wave_period"); }
+    public ArrayList<Double> getWindSpeed() { return getArrayFromForecast(forecastData, "wind_speed"); }
+    public ArrayList<Double> getWindGustSpeed() { return getArrayFromForecast(forecastData, "wind_gust"); }
+    public ArrayList<Double> getWindDirection() { return getArrayFromForecast(forecastData, "wind_direction"); }
+    public ArrayList<Double> getTemperature() { return getArrayFromForecast(forecastData, "temperature"); }
 
-        int millis_diff = (int) (now_timestamp - initial_timestamp);
-
-        double _3H_IN_MILLIS = 10800000.0;
-        return (int) (millis_diff / _3H_IN_MILLIS);
-    }
-
-    public int getInitialTimestamp() { return getIntFromForecast(forecastData, "initstamp"); }
-    public ArrayList<Double> getWaveHeight() { return getArrayFromForecast(forecastData, "HTSGW"); }
-    public ArrayList<Double> getWaveDirection() { return getArrayFromForecast(forecastData, "DIRPW"); }
-    public ArrayList<Double> getWavePeriod() { return getArrayFromForecast(forecastData, "PERPW"); }
-    public ArrayList<Double> getWindSpeed() { return getArrayFromForecast(forecastData, "WINDSPD"); }
-    public ArrayList<Double> getWindGustSpeed() { return getArrayFromForecast(forecastData, "GUST"); }
-    public ArrayList<Double> getWindDirection() { return getArrayFromForecast(forecastData, "WINDDIR"); }
-    public ArrayList<Double> getTemperature() { return getArrayFromForecast(forecastData, "TMPE"); }
-
-    public Double getWaveHeightNow() { return getWaveHeight().get(getForecastIndex()); }
-    public Double getWaveDirectionNow() { return getWaveDirection().get(getForecastIndex()); }
-    public Double getWavePeriodNow() { return getWavePeriod().get(getForecastIndex()); }
-    public Double getWindSpeedNow() { return getWindSpeed().get(getForecastIndex()); }
-    public Double getWindGustSpeedNow() { return getWindGustSpeed().get(getForecastIndex()); }
-    public Double getWindDirectionNow() { return getWindDirection().get(getForecastIndex()); }
-    public Double getTemperatureNow() { return getTemperature().get(getForecastIndex()); }
-
-    protected int getIntFromForecast(JSONObject forecast, String key) {
-        try {
-            if (forecast.has(key)) {
-                Log.d(TAG, String.format("Forecast has key {%s}", key));
-                Log.d(TAG, String.format("%s: %d", key, forecast.getInt(key)));
-                return forecast.getInt(key);
-            } else {
-                Log.w(TAG, String.format("FORECAST DOES NOT HAVE KEY {%s}", key));
-                return -1;
-            }
-        } catch (Exception e) {
-            if (e.getMessage() != null) Log.e(TAG, e.getMessage());
-            e.printStackTrace();
-            return -1;
-        }
-    }
+    public Double getWaveHeightNow() { if (getWaveHeight() == null) { return 0.0; } else { return getWaveHeight().get(0); } }
+    public Double getWaveDirectionNow() { if (getWaveDirection() == null) { return 0.0; } else { return getWaveDirection().get(0); } }
+    public Double getWavePeriodNow() { if (getWavePeriod() == null) { return 0.0; } else { return getWavePeriod().get(0); } }
+    public Double getWindSpeedNow() { if (getWindSpeed() == null) { return 0.0; } else { return getWindSpeed().get(0); } }
+    public Double getWindGustSpeedNow() { if (getWindGustSpeed() == null) { return 0.0; } else { return getWindGustSpeed().get(0); } }
+    public Double getWindDirectionNow() { if (getWindDirection() == null) { return 0.0; } else { return getWindDirection().get(0); } }
+    public Double getTemperatureNow() { if (getTemperature() == null) { return 0.0; } else { return getTemperature().get(0); } }
 
     protected ArrayList<Double> getArrayFromForecast(JSONObject forecast, String key) {
         try {
