@@ -1,4 +1,6 @@
 # Surf Bro Widget!
+![SurfBroApp](/SurfBro.png)
+
 Surf Bro is your everyday surfing bro! Know within seconds just how right the conditions are and never miss another surfing day again!
 
 ## Release Versions
